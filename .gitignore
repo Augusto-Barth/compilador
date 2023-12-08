@@ -1,0 +1,11 @@
+*.c
+*.h
+out
+*.pil
+
+#   comp.sh
+#   lexico-flex.l
+#   parser-bison.y
+#   prog.cs
+#   pilheitor.cpp
+#   pilheitor
