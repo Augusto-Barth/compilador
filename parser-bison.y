@@ -3,6 +3,7 @@
 #include <string.h>
 
 unsigned int pilha_index = 0;
+unsigned int pilha_atual = 0;
 unsigned int pilha[1000];
 
 // Um simbolo da tabela de simbolos é um id e seu endereço
@@ -41,22 +42,23 @@ listacomandos : comando
 comando : decl PEV
         | atrib PEV
         | laco 
+        | teste
         | expr PEV
         | print PEV;
 
 /* gramatica de exemplo para lacos */
 laco: WHILE {
-            pilha[pilha_index] = pilha_index++; 
-            pilha[pilha_index] = pilha_index++;
-            printf("R%d: NADA\n", pilha[pilha_index-1]); 
+            pilha[pilha_index++] = pilha_atual++; 
+            pilha[pilha_index++] = pilha_atual++;
+            printf("R%d: NADA\n", pilha[pilha_index-2]); 
         }      /* ao ler um while, imprimir o rotulo de inicio */
       LPAR
-      condicao {printf("GFALSE R%d\n", pilha[pilha_index]); } /* apos a condicao, se for falsa, vai para rotulo de fim */
+      condicao {printf("GFALSE R%d\n", pilha[pilha_index-1]); } /* apos a condicao, se for falsa, vai para rotulo de fim */
       RPAR
       LCHAV
       listacomandos {
-          printf("GOTO R%d\n", pilha[pilha_index-1]);         /* ao fim do bloco, volta para o rotulo do inicio do laco */
-          printf("R%d: NADA\n", pilha[pilha_index]);        /* rotulo de fim do laco*/
+          printf("GOTO R%d\n", pilha[pilha_index-2]);         /* ao fim do bloco, volta para o rotulo do inicio do laco */
+          printf("R%d: NADA\n", pilha[pilha_index-1]);        /* rotulo de fim do laco*/
           pilha_index -= 2;
       }
       RCHAV
@@ -78,6 +80,15 @@ condicao: expr MENOR expr {printf("MENOR\n"); }
     | IGUAL {printf("IGUAL\n"); }
     | DIF {printf("DIFER\n"); }; */
 
+teste : IF {pilha[pilha_index++] = pilha_atual++;}
+        condicao {printf("GFALSE R%d\n", pilha[pilha_index-1]); }
+        LCHAV 
+        listacomandos {
+          printf("R%d: NADA\n", pilha[pilha_index-1]);
+          pilha_index -= 1;
+        }
+        RCHAV
+
 print : IMPR expr {printf("IMPR\n"); };
 
 decl : DECL ID { tabsimb[nsimbs] = (simbolo){$2, nsimbs}; nsimbs++; }
@@ -87,9 +98,11 @@ decl : DECL ID { tabsimb[nsimbs] = (simbolo){$2, nsimbs}; nsimbs++; }
 atrib : ID ATRIB expr {printf("ATR %%%d\n", getendereco($1)); };
 
 expr : expr MAIS termo {printf("SOMA\n");}
+     | expr MENOS termo {printf("SUB\n");}
      | termo ;
 
-termo : termo DIV fator {printf("DIV");}
+termo : termo MUL fator {printf("MULT");}
+      | termo DIV fator {printf("DIV");}
       | fator ;
 
 fator : ID {printf("PUSH %%%d\n", getendereco($1));}
