@@ -4,8 +4,8 @@ SE QUER OUTRA? y GG
 
 a ENTAO TOMA 0 GG
 
-FAKE B(x ENTAO TOMA 0 GG x < 5 GG x OTA){
-    FAKE B(y ENTAO TOMA 0 GG y < 5 GG y OTA){
+FAKE B(x ENTAO TOMA 0 GG x < 5 GG x ENTAO TOMA x QUE OTA 1){
+    FAKE B(y ENTAO TOMA 0 GG y < 5 GG y ENTAO TOMA y QUE OTA 1){
         BANGUEI(x) GG
         BANGUEI(y) GG
     }
