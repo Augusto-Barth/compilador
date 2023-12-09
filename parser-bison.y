@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 unsigned int pilha_index = 0;
@@ -21,6 +22,8 @@ int getendereco(char *id) {
     for (int i=0;i<nsimbs;i++)
         if (!strcmp(tabsimb[i].id, id))
             return tabsimb[i].end;
+    fprintf(stderr, "ERRO: erro semantico (var %s nao declarado)\n", id); // nao achou a variavel
+    exit(EXIT_FAILURE);
 }
 
 %}
@@ -82,13 +85,17 @@ condicao: expr MENOR expr {printf("MENOR\n"); }
     | DIF {printf("DIFER\n"); }; */
 
 teste : IF {pilha[pilha_index++] = pilha_atual++;}
+        LPAR
         condicao {printf("GFALSE R%d\n", pilha[pilha_index-1]); }
+        RPAR
         LCHAV 
         listacomandos {
           printf("R%d: NADA\n", pilha[pilha_index-1]);
           pilha_index -= 1;
         }
         RCHAV
+    /*fazer o else; tem que alterar a pilha,
+    mas nao precisa de else if else if else if...., entao fica mais facil*/
 
 print : IMPR LPAR expr RPAR {printf("IMPR\n"); };
 
@@ -103,7 +110,7 @@ atrib : ID ATRIB expr {printf("ATR %%%d\n", getendereco($1)); };
 
 expr : expr MAIS termo {printf("SOMA\n");}
      | expr MENOS termo {printf("SUB\n");}
-     | expr MOD termo {printf("MOD\n");}
+     | expr MOD termo {printf("MOD\n");}    /*mudar a precedencia da operacao?*/
      | termo ;
 
 termo : termo MUL fator {printf("MULT\n");}
