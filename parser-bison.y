@@ -44,7 +44,8 @@ comando : decl PEV
         | laco 
         | teste
         | expr PEV
-        | print PEV;
+        | print PEV
+        | scan PEV;
 
 /* gramatica de exemplo para lacos */
 laco: WHILE {
@@ -89,7 +90,10 @@ teste : IF {pilha[pilha_index++] = pilha_atual++;}
         }
         RCHAV
 
-print : IMPR expr {printf("IMPR\n"); };
+print : IMPR LPAR expr RPAR {printf("IMPR\n"); };
+
+scan : LEIA LPAR ID RPAR {printf("LEIA\n");
+                            printf("ATR %%%d\n", getendereco($3)); };
 
 decl : DECL ID { tabsimb[nsimbs] = (simbolo){$2, nsimbs}; nsimbs++; }
      | DECL ID ATRIB expr { tabsimb[nsimbs] = (simbolo){$2, nsimbs}; nsimbs++;
@@ -99,10 +103,11 @@ atrib : ID ATRIB expr {printf("ATR %%%d\n", getendereco($1)); };
 
 expr : expr MAIS termo {printf("SOMA\n");}
      | expr MENOS termo {printf("SUB\n");}
+     | expr MOD termo {printf("MOD\n");}
      | termo ;
 
-termo : termo MUL fator {printf("MULT");}
-      | termo DIV fator {printf("DIV");}
+termo : termo MUL fator {printf("MULT\n");}
+      | termo DIV fator {printf("DIV\n");}
       | fator ;
 
 fator : ID {printf("PUSH %%%d\n", getendereco($1));}
