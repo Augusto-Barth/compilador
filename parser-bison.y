@@ -66,6 +66,37 @@ laco: WHILE {
           pilha_index -= 2;
       }
       RCHAV
+      |
+      FOR {
+        pilha[pilha_index++] = pilha_atual++;
+        pilha[pilha_index++] = pilha_atual++;
+        pilha[pilha_index++] = pilha_atual++;
+        pilha[pilha_index++] = pilha_atual++;
+      }
+      LPAR
+      atrib {
+            printf("R%d: NADA\n", pilha[pilha_index-4]);
+      }
+      PEV
+      condicao {
+            
+            printf("GFALSE R%d\n", pilha[pilha_index-3]);
+            printf("GOTO R%d\n", pilha[pilha_index-2]); 
+            printf("R%d: NADA\n", pilha[pilha_index-1]); 
+      }
+      PEV
+      atrib {
+            printf("GOTO R%d\n", pilha[pilha_index-4]);
+            printf("R%d: NADA\n", pilha[pilha_index-2]);
+      }
+      RPAR
+      LCHAV
+      listacomandos {
+          printf("GOTO R%d\n", pilha[pilha_index-1]);  
+          printf("R%d: NADA\n", pilha[pilha_index-3]);
+          pilha_index -= 4;
+      }
+      RCHAV
       ;
 
 
@@ -108,6 +139,8 @@ decl : DECL ID { tabsimb[nsimbs] = (simbolo){$2, nsimbs}; nsimbs++; }
 
 atrib : ID ATRIB expr {printf("ATR %%%d\n", getendereco($1)); };
 
+
+/*INC e DEC vao aqui? operadores unarios*/
 expr : expr MAIS termo {printf("SOMA\n");}
      | expr MENOS termo {printf("SUB\n");}
      | expr MOD termo {printf("MOD\n");}    /*mudar a precedencia da operacao?*/
