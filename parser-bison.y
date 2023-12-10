@@ -22,8 +22,17 @@ int getendereco(char *id) {
     for (int i=0;i<nsimbs;i++)
         if (!strcmp(tabsimb[i].id, id))
             return tabsimb[i].end;
-    fprintf(stderr, "ERRO: erro semantico (var %s nao declarado)\n", id); // nao achou a variavel
+    fprintf(stderr, "ERROR: semantic error (variable %s not declared)\n", id); // nao achou a variavel
     exit(EXIT_FAILURE);
+}
+
+void writeendereco(char* id){
+    for (int i=0;i<nsimbs;i++)
+        if (!strcmp(tabsimb[i].id, id)){
+            fprintf(stderr, "ERROR: semantic error (variable %s already declared)\n", id); // ja existe variavel
+            exit(EXIT_FAILURE);
+        }
+    tabsimb[nsimbs] = (simbolo){id, nsimbs}; nsimbs++;
 }
 
 %}
@@ -137,8 +146,8 @@ print : IMPR LPAR expr RPAR {printf("IMPR\n"); };
 scan : LEIA LPAR ID RPAR {printf("LEIA\n");
                             printf("ATR %%%d\n", getendereco($3)); };
 
-decl : DECL ID { tabsimb[nsimbs] = (simbolo){$2, nsimbs}; nsimbs++; }
-     | DECL ID ATRIB expr { tabsimb[nsimbs] = (simbolo){$2, nsimbs}; nsimbs++;
+decl : DECL ID { writeendereco($2); }
+     | DECL ID ATRIB expr { writeendereco($2);
                                 printf("ATR %%%d\n", getendereco($2)); };
 
 atrib : ID ATRIB expr {printf("ATR %%%d\n", getendereco($1)); };
@@ -170,4 +179,4 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void yyerror(char *s) { fprintf(stderr,"ERRO: %s\n", s); }
+void yyerror(char *s) { fprintf(stderr,"ERROR: %s\n", s); }
