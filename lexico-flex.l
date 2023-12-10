@@ -41,7 +41,8 @@ MUTE.*$ {}
     yylval.str_val = strdup(yytext);
     return ID;
 }
-" " {}
-"\n" {}
+[ \t\r\n]+ {}
+. { yyerror("lexical error");
+            exit(EXIT_FAILURE); }
 
 %%

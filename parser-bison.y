@@ -45,7 +45,7 @@ listacomandos : comando
 comando : decl PEV
         | atrib PEV
         | laco 
-        | teste
+        | if
         | expr PEV
         | print PEV
         | scan PEV;
@@ -106,7 +106,7 @@ condicao: expr MENOR expr {printf("MENOR\n"); }
         | expr DIF expr {printf("DIFER\n"); };
 
 
-teste : IF {
+if : IF {
             pilha[pilha_index++] = pilha_atual++;
             pilha[pilha_index++] = pilha_atual++;
         }
