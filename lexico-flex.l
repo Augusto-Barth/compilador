@@ -7,7 +7,7 @@
 
 %%
 
-MUTE.*$ {}
+"MUTE".*$ {}
 "SE QUER OUTRA?" { return DECL; }
 "QUE OTA" { return MAIS; } 
 "DROPA" { return MENOS; }
