@@ -33,14 +33,14 @@ int getendereco(char *id) {
     int int_val;
 }
 
-%token DECL MAIS MENOS DIV MUL MOD INC DEC LPAR RPAR LCHAV RCHAV PEV ATRIB IGUAL DIF MENOR MENORIG MAIOR MAIORIG WHILE FOR IF ELSE IMPR LEIA SAIR <int_val>NUM <str_val>ID
+%token DECL MAIS MENOS DIV MUL MOD LPAR RPAR LCHAV RCHAV PEV ATRIB IGUAL DIF MENOR MENORIG MAIOR MAIORIG WHILE FOR IF ELSE IMPR LEIA SAIR <int_val>NUM <str_val>ID
 
 %%
 
 programa : listacomandos SAIR PEV {printf("SAIR\n"); };
 
 listacomandos : comando
-              | comando listacomandos
+              | comando listacomandos;
 
 comando : decl PEV
         | atrib PEV
@@ -50,7 +50,6 @@ comando : decl PEV
         | print PEV
         | scan PEV;
 
-/* gramatica de exemplo para lacos */
 laco: WHILE {
             pilha[pilha_index++] = pilha_atual++; 
             pilha[pilha_index++] = pilha_atual++;
@@ -99,34 +98,39 @@ laco: WHILE {
       RCHAV
       ;
 
-
-/* condicao: ID {printf("PUSH %%%d\n", getendereco($1));} comp expr ; */
 condicao: expr MENOR expr {printf("MENOR\n"); }
         | expr MENORIG expr {printf("MENOREQ\n"); }
         | expr MAIOR expr {printf("MAIOR\n"); }
         | expr MAIORIG expr {printf("MAIOREQ\n"); }
         | expr IGUAL expr {printf("IGUAL\n"); }
-        | expr DIF expr {printf("DIFER\n"); }
+        | expr DIF expr {printf("DIFER\n"); };
 
-/* comp: MENOR { return "MENOR"; }
-    | MENORIG {printf("MENOREQ\n"); }
-    | MAIOR {printf("MAIOR\n"); }
-    | MAIORIG {printf("MAIOREQ\n"); }
-    | IGUAL {printf("IGUAL\n"); }
-    | DIF {printf("DIFER\n"); }; */
 
-teste : IF {pilha[pilha_index++] = pilha_atual++;}
+teste : IF {
+            pilha[pilha_index++] = pilha_atual++;
+            pilha[pilha_index++] = pilha_atual++;
+        }
         LPAR
-        condicao {printf("GFALSE R%d\n", pilha[pilha_index-1]); }
+        condicao { printf("GFALSE R%d\n", pilha[pilha_index-2]); }
         RPAR
         LCHAV 
-        listacomandos {
-          printf("R%d: NADA\n", pilha[pilha_index-1]);
-          pilha_index -= 1;
-        }
+        listacomandos
         RCHAV
-    /*fazer o else; tem que alterar a pilha,
-    mas nao precisa de else if else if else if...., entao fica mais facil*/
+        {
+            printf("GOTO R%d\n", pilha[pilha_index-1]);
+            printf("R%d: NADA\n", pilha[pilha_index-2]);
+        }
+        opt_else
+        {
+            printf("R%d: NADA\n", pilha[pilha_index-1]);
+            pilha_index -= 2;
+        };
+
+opt_else : /* vazio */
+         | ELSE
+           LCHAV
+           listacomandos
+           RCHAV ;
 
 print : IMPR LPAR expr RPAR {printf("IMPR\n"); };
 
@@ -139,15 +143,13 @@ decl : DECL ID { tabsimb[nsimbs] = (simbolo){$2, nsimbs}; nsimbs++; }
 
 atrib : ID ATRIB expr {printf("ATR %%%d\n", getendereco($1)); };
 
-
-/*INC e DEC vao aqui? operadores unarios*/
 expr : expr MAIS termo {printf("SOMA\n");}
      | expr MENOS termo {printf("SUB\n");}
-     | expr MOD termo {printf("MOD\n");}    /*mudar a precedencia da operacao?*/
      | termo ;
 
 termo : termo MUL fator {printf("MULT\n");}
       | termo DIV fator {printf("DIV\n");}
+      | termo MOD fator {printf("MOD\n");}
       | fator ;
 
 fator : ID {printf("PUSH %%%d\n", getendereco($1));}

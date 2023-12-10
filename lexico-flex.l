@@ -14,8 +14,6 @@ MUTE.*$ {}
 "SPLIT" { return DIV; }
 "K" { return MUL; }
 "CLUTCH" { return MOD; }
-"OTA" {return INC; }
-"MIADO" {return DEC; }
 "(" { return LPAR; }
 ")" { return RPAR; }
 "{" { return LCHAV; }
