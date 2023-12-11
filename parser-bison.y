@@ -7,32 +7,35 @@ unsigned int pilha_index = 0;
 unsigned int pilha_atual = 0;
 unsigned int pilha[1000];
 
-// Um simbolo da tabela de simbolos é um id e seu endereço
+/* Um simbolo da tabela de simbolos é um id e seu endereço */
 typedef struct {
     char *id;
     int end;
 } simbolo;
 
-// Vetor de simbolos (a tabela de simbolos em si)
+/* Tabela de simbolos */
 simbolo tabsimb[1000];
 int nsimbs = 0;
 
-// Dado um ID, busca na tabela de simbolos o endereço respectivo
+/* Procura uma variavel pelo nome, se ela eh encontrada, retorna se o endereco dela
+   Se nao, estamos tentando acessar uma variavel nao declarada, erro semantico */
 int getendereco(char *id) {
     for (int i=0;i<nsimbs;i++)
         if (!strcmp(tabsimb[i].id, id))
-            return tabsimb[i].end;
+            return tabsimb[i].end; // achamos 
     fprintf(stderr, "ERROR: semantic error (variable %s not declared)\n", id); // nao achou a variavel
     exit(EXIT_FAILURE);
 }
 
+/* Insere uma variavel na tabela de simbolos se ela nao existe ainda
+   Se ja existe, estamos tentando declarar uma variavel duas vezes, erro semantico */
 void writeendereco(char* id){
     for (int i=0;i<nsimbs;i++)
         if (!strcmp(tabsimb[i].id, id)){
             fprintf(stderr, "ERROR: semantic error (variable %s already declared)\n", id); // ja existe variavel
             exit(EXIT_FAILURE);
         }
-    tabsimb[nsimbs] = (simbolo){id, nsimbs}; nsimbs++;
+    tabsimb[nsimbs] = (simbolo){id, nsimbs}; nsimbs++; // inserindo na tabela
 }
 
 %}
@@ -63,7 +66,7 @@ laco: WHILE {
             pilha[pilha_index++] = pilha_atual++; 
             pilha[pilha_index++] = pilha_atual++;
             printf("R%d: NADA\n", pilha[pilha_index-2]); 
-        }      /* ao ler um while, imprimir o rotulo de inicio */
+        }   /* ao ler um while, imprimir o rotulo de inicio */
       LPAR
       condicao {printf("GFALSE R%d\n", pilha[pilha_index-1]); } /* apos a condicao, se for falsa, vai para rotulo de fim */
       RPAR
@@ -84,24 +87,25 @@ laco: WHILE {
       LPAR
       atrib {
             printf("R%d: NADA\n", pilha[pilha_index-4]);
-      }
+      } /* Rotulo de inicio */
       PEV
       condicao {
             
-            printf("GFALSE R%d\n", pilha[pilha_index-3]);
-            printf("GOTO R%d\n", pilha[pilha_index-2]); 
-            printf("R%d: NADA\n", pilha[pilha_index-1]); 
+            printf("GFALSE R%d\n", pilha[pilha_index-3]); /* se a condicao for falsa, vai para o fim */
+            printf("GOTO R%d\n", pilha[pilha_index-2]); /* pula o terceiro "passo" do for, ele so 
+                                                        eh executado no fim do bloco de codigo dentro do for*/
+            printf("R%d: NADA\n", pilha[pilha_index-1]); /* inicio do codigo executado apos cada iteracao */
       }
       PEV
       atrib {
-            printf("GOTO R%d\n", pilha[pilha_index-4]);
-            printf("R%d: NADA\n", pilha[pilha_index-2]);
+            printf("GOTO R%d\n", pilha[pilha_index-4]); /* volta para o inicio (condicao) */
+            printf("R%d: NADA\n", pilha[pilha_index-2]); /* rotulo de comeco do bloco de codigo */
       }
       RPAR
       LCHAV
       listacomandos {
-          printf("GOTO R%d\n", pilha[pilha_index-1]);  
-          printf("R%d: NADA\n", pilha[pilha_index-3]);
+          printf("GOTO R%d\n", pilha[pilha_index-1]);   /* vai para o codigo executado apos cada iteracao */
+          printf("R%d: NADA\n", pilha[pilha_index-3]); /* rotulo de fim do for */
           pilha_index -= 4;
       }
       RCHAV
@@ -166,7 +170,7 @@ fator : ID {printf("PUSH %%%d\n", getendereco($1));}
       | LPAR expr RPAR ;
 %%
 
-// extern FILE *yyin;                   // (*) descomente para ler de um arquivo
+// extern FILE *yyin;                   // (*) descomente para ler de um arquivo,
 
 int main(int argc, char *argv[]) {
 
