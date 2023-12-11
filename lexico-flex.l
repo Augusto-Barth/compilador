@@ -33,7 +33,7 @@
 "BANGUEI" {return IMPR; }
 "CALL" { return LEIA; }
 "NO SCOPE HEADSHOT VARADO CEGO PELA SMOKE" { return SAIR; }
-[0-9]+ {
+[0-9]+|"-"[0-9]+ {
     yylval.int_val = atoi(yytext);
     return NUM;
 }
