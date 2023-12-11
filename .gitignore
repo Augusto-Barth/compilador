@@ -2,6 +2,7 @@
 *.h
 out
 *.pil
+compilador
 
 #   comp.sh
 #   lexico-flex.l
