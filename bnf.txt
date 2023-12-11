@@ -1,0 +1,49 @@
+<programa>      ::= <listacomandos> SAIR PEV
+
+<listacomandos> ::= <comando>
+                |   <comando> <listacomandos>
+
+<comando>       ::= <decl> PEV
+                |   <atrib> PEV
+                |   <laco>
+                |   <if>
+                |   <expr> PEV
+                |   <print> PEV
+                |   <scan> PEV
+
+<laco>          ::= WHILE LPAR <condicao> RPAR LCHAV <listacomandos> RCHAV
+                |   FOR LPAR <atrib> PEV <condicao> PEV <atrib> RPAR LCHAV <listacomandos> RCHAV
+
+<condicao>      ::= <expr> MENOR <expr>
+                |   <expr> MENORIG <expr>
+                |   <expr> MAIOR <expr>
+                |   <expr> MAIORIG <expr>
+                |   <expr> IGUAL <expr>
+                |   <expr> DIF <expr>
+
+<if>            ::= IF LPAR <condicao> RPAR LCHAV <listacomandos> RCHAV <opt_else>
+
+<opt_else>      ::= ε
+                |   ELSE LCHAV <listacomandos> RCHAV
+
+<print>         ::= IMPR LPAR <expr> RPAR
+
+<scan>          ::= LEIA LPAR ID RPAR
+
+<decl>          ::= DECL ID
+                |   DECL ID ATRIB <expr>
+
+<atrib>         ::= ID ATRIB <expr>
+
+<expr>          ::= <expr> MAIS <termo>
+                |   <expr> MENOS <termo>
+                |   <termo>
+
+<termo>         ::= <termo> MUL <fator>
+                |   <termo> DIV <fator>
+                |   <termo> MOD <fator>
+                |   <fator>
+
+<fator>         ::= ID 
+                |   NUM
+                |   LPAR <expr> RPAR
