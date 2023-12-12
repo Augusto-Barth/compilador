@@ -1,8 +1,9 @@
 *.c
 *.h
-out
 *.pil
+out
 compilador
+pilheitor
 
 #   comp.sh
 #   lexico-flex.l
