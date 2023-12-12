@@ -1,3 +1,18 @@
+Integrantes:    Augusto Miguel Barth            2370387
+                João Pedro Correa Crozariolo    2370557
+                Pedro Henrique Galeski          2370611
+
+
+Comentários:    
+        O arquivo compilar.sh é um script que compila um código 
+    na linguagem do CS2 (.cs2), gera um arquivo .pil de saída e 
+    já o executa.
+        Comando:
+    bash compilar.sh [programa].cs2 [saida].pil
+
+
+Grámatica da linguagem na Backus Naur Form (BNF)
+
 <programa>      ::= <listacomandos> SAIR PEV
 
 <listacomandos> ::= <comando>
