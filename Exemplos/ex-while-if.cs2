@@ -1,0 +1,17 @@
+SE QUER OUTRA? X GG
+X ENTAO TOMA 0 GG
+
+RUSH B (X != -1)
+{
+    CALL (X) GG
+    ECO (X CLUTCH 2 == 0)
+    {
+        BANGUEI (0) GG
+    }
+    ECO SECO
+    {
+        BANGUEI (1) GG
+    }
+}
+
+NO SCOPE HEADSHOT VARADO CEGO PELA SMOKE GG

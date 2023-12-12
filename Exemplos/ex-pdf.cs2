@@ -1,0 +1,16 @@
+SE QUER OUTRA? var1 ENTAO TOMA 0 GG
+SE QUER OUTRA? evair ENTAO TOMA 0 GG
+
+CALL (var1) GG
+CALL (evair) GG
+
+ECO ( var1 > evair )
+{
+    BANGUEI (var1) GG
+}
+ECO SECO
+{
+    BANGUEI (evair) GG
+}
+
+NO SCOPE HEADSHOT VARADO CEGO PELA SMOKE GG
